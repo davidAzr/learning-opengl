@@ -18,7 +18,7 @@
     <ClCompile Include="glad.c">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="HelloWindow.cpp">
+    <ClCompile Include="learningopengl.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
