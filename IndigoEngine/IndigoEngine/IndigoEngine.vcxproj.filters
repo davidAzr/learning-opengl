@@ -33,5 +33,11 @@
   <ItemGroup>
     <None Include="shaders\vs_hellotriangle.glsl" />
     <None Include="shaders\fs_hellotriangle.glsl" />
+    <None Include="shaders\vs_upsidedown.glsl" />
+    <None Include="shaders\vs_withcolorinput.glsl" />
+    <None Include="shaders\fs_withcolorinput.glsl" />
+    <None Include="shaders\vs_withoffset.glsl" />
+    <None Include="shaders\vs_postofrag.glsl" />
+    <None Include="shaders\fs_postofrag.glsl" />
   </ItemGroup>
 </Project>
