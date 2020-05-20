@@ -24,17 +24,30 @@
     <ClCompile Include="shader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="imageloader.h" />
     <ClInclude Include="shader.h" />
+    <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\fs_firsttexture.glsl" />
     <None Include="shaders\fs_hellotriangle.glsl" />
     <None Include="shaders\fs_postofrag.glsl" />
+    <None Include="shaders\fs_twotextures.glsl" />
+    <None Include="shaders\fs_twotexturesflip.glsl" />
     <None Include="shaders\fs_withcolorinput.glsl" />
+    <None Include="shaders\vs_firsttexture.glsl" />
+    <None Include="shaders\vs_firsttransform.glsl" />
     <None Include="shaders\vs_hellotriangle.glsl" />
     <None Include="shaders\vs_postofrag.glsl" />
     <None Include="shaders\vs_upsidedown.glsl" />
     <None Include="shaders\vs_withcolorinput.glsl" />
     <None Include="shaders\vs_withoffset.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="textures\sky.png" />
+    <Image Include="textures\texture1.jpg" />
+    <Image Include="textures\texture2.png" />
+    <Image Include="textures\venus.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -88,7 +101,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\libraries\OpenGL\includes;$(IncludePath)</IncludePath>
+    <IncludePath>C:\libraries\OpenGL\includes;D:\David\Documents\OpenGL\glm-0.9.9.8\glm;$(IncludePath)</IncludePath>
     <LibraryPath>C:\libraries\OpenGL\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
