@@ -50,6 +50,8 @@
     <None Include="shaders\fs_twotextures.glsl" />
     <None Include="shaders\fs_twotexturesflip.glsl" />
     <None Include="shaders\vs_firsttransform.glsl" />
+    <None Include="shaders\vs_first3d.glsl" />
+    <None Include="shaders\vs_cube.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\texture1.jpg">

@@ -35,6 +35,8 @@
     <None Include="shaders\fs_twotextures.glsl" />
     <None Include="shaders\fs_twotexturesflip.glsl" />
     <None Include="shaders\fs_withcolorinput.glsl" />
+    <None Include="shaders\vs_cube.glsl" />
+    <None Include="shaders\vs_first3d.glsl" />
     <None Include="shaders\vs_firsttexture.glsl" />
     <None Include="shaders\vs_firsttransform.glsl" />
     <None Include="shaders\vs_hellotriangle.glsl" />
