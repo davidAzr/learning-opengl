@@ -58,6 +58,10 @@
     <None Include="shaders\vs_firsttransform.glsl" />
     <None Include="shaders\vs_first3d.glsl" />
     <None Include="shaders\vs_cube.glsl" />
+    <None Include="shaders\fs_lightcube.glsl" />
+    <None Include="shaders\vs_lightcube.glsl" />
+    <None Include="shaders\vs_lighted.glsl" />
+    <None Include="shaders\fs_lighted.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\texture1.jpg">

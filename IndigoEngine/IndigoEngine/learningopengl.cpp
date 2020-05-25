@@ -62,8 +62,8 @@ int main() {
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetCursorPosCallback(window, mouse_callback);
 
-	Shader shaderProgram(VERTEX_SHADER_FILEPATH, FRAGMENT_SHADER_FILEPATH);
-	shaderProgram.Use();
+	Shader lightCubeShaderProgram("shaders/vs_lightcube.glsl", "shaders/fs_lightcube.glsl");
+	Shader lightedShaderProgram("shaders/vs_lighted.glsl", "shaders/fs_lighted.glsl");
 
 	unsigned int VAO;
 	glGenVertexArrays(1, &VAO);
@@ -133,7 +133,7 @@ int main() {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	unsigned int indices[] = {
+	/*unsigned int indices[] = {
 		0, 1, 3,
 		1, 2, 3
 	};
@@ -141,12 +141,19 @@ int main() {
 	glGenBuffers(1, &EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
+*/
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+
+	unsigned int VAO2;
+	glGenVertexArrays(1, &VAO2);
+	glBindVertexArray(VAO2);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
 
 	// Textures
 	unsigned int texture1;
@@ -191,14 +198,8 @@ int main() {
 	stbi_image_free(data);
 	stbi_image_free(data2);
 
-	shaderProgram.setInt("texture1", 0);
-	shaderProgram.setInt("texture2", 1);
-
-	glm::mat4 model(1.f);
-	model = glm::rotate(model, glm::radians(-55.f), glm::vec3(1.f, 0.f, 0.f));
-	
-	glm::mat4 view(1.f);
-	view = glm::translate(view, glm::vec3(0.f, 0.f, -3.f));
+	//shaderProgram.setInt("texture1", 0);
+	//shaderProgram.setInt("texture2", 1);
 
 	glm::mat4 projection;
 	projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
@@ -216,37 +217,37 @@ int main() {
 		glClearColor(0.6f, 0.1f, 0.5f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		shaderProgram.Use();
-
-	
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture1);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, texture2);
-
-		const float radius = 10.f;
-		float camX = sin(glfwGetTime()) * radius;
-		float camZ = cos(glfwGetTime()) * radius;
 		glm::mat4 view;
 		view = camera.GetViewMatrix();
 
-		glm::mat4 projection;
-		projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+		glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
+		glm::vec3 objectColor(0.3f, 1.0f, 0.1f);
 
-		glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-		
+		lightCubeShaderProgram.Use();
+	
+		glm::mat4 lightCubeModelMatrix(1.0f);
+		lightCubeModelMatrix = glm::translate(lightCubeModelMatrix, glm::vec3(2.f, 2.f, 0.f));
+		lightCubeModelMatrix = glm::scale(lightCubeModelMatrix, glm::vec3(0.2f));
+		glUniformMatrix4fv(glGetUniformLocation(lightCubeShaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightCubeModelMatrix));
+		glUniformMatrix4fv(glGetUniformLocation(lightCubeShaderProgram.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(glGetUniformLocation(lightCubeShaderProgram.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		glUniform3fv(glGetUniformLocation(lightCubeShaderProgram.ID, "lightColor"), 1, glm::value_ptr(lightColor));
 
-		
 		glBindVertexArray(VAO);
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		for (auto i = 0; i < 10; ++i) {
-			glm::mat4 model(1.0f);
-			model = glm::translate(model, cubePositions[i]);
-			model = glm::rotate(model, (float)glfwGetTime() * glm::radians(55.f), glm::vec3(0.3, 1.0, 0.6));
-			glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		lightedShaderProgram.Use();
+		
+		glm::mat4 lightedCubeModelMatrix(1.0f);
+		lightedCubeModelMatrix = glm::translate(lightedCubeModelMatrix, glm::vec3(0.f, 0.f, 0.f));
+		glUniformMatrix4fv(glGetUniformLocation(lightedShaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightedCubeModelMatrix));
+		glUniformMatrix4fv(glGetUniformLocation(lightedShaderProgram.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(glGetUniformLocation(lightedShaderProgram.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "lightColor"), 1, glm::value_ptr(lightColor));
+		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "objectColor"), 1, glm::value_ptr(objectColor));
+
+		glBindVertexArray(VAO2);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
