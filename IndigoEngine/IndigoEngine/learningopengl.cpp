@@ -213,15 +213,18 @@ int main() {
 		glm::mat4 view;
 		view = camera.GetViewMatrix();
 
-		glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
-		glm::vec3 objectColor(0.3f, 1.0f, 0.1f);
+		glm::vec3 lightColor;
+		lightColor.x = sin(glfwGetTime() * 2.0f);
+		lightColor.y = sin(glfwGetTime() * 0.7f);
+		lightColor.z = sin(glfwGetTime() * 1.3f);
+
 		glm::vec3 viewPos = camera.getPos();
 
 		lightCubeShaderProgram.Use();
 
 		float radius = 5.f;
 		//glm::vec3 lightPos(sin(currentTime) * radius, 1.0f, cos(currentTime) * radius);
-		glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+		glm::vec3 lightPos(1.2f, 1.f, 2.f);
 		glm::mat4 lightCubeModelMatrix(1.0f);
 		lightCubeModelMatrix = glm::translate(lightCubeModelMatrix, lightPos);
 		lightCubeModelMatrix = glm::scale(lightCubeModelMatrix, glm::vec3(0.2f));
@@ -240,9 +243,33 @@ int main() {
 		glUniformMatrix4fv(glGetUniformLocation(lightedShaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightedCubeModelMatrix));
 		glUniformMatrix4fv(glGetUniformLocation(lightedShaderProgram.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(glGetUniformLocation(lightedShaderProgram.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "lightColor"), 1, glm::value_ptr(lightColor));
-		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "lightPos"), 1, glm::value_ptr(lightPos));
-		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "objectColor"), 1, glm::value_ptr(objectColor));
+		
+		/*glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "pointlight.position"), 1, glm::value_ptr(lightPos));
+		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "pointlight.ambient"), 1, glm::value_ptr(glm::vec3(0.1f, 0.1f, 0.1f)));
+		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "pointlight.diffuse"), 1, glm::value_ptr(lightColor));
+		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "pointlight.specular"), 1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
+		glUniform1f(glGetUniformLocation(lightedShaderProgram.ID, "pointlight.constant"), 1.0f);
+		glUniform1f(glGetUniformLocation(lightedShaderProgram.ID, "pointlight.linear"), 0.7f);
+		glUniform1f(glGetUniformLocation(lightedShaderProgram.ID, "pointlight.quadratic"), 1.8f);
+*/
+		/*glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "dirlight.direction"), 1, glm::value_ptr(glm::vec3(0.0f, -1.0f, 0.0f)));
+		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "dirlight.ambient"), 1, glm::value_ptr(glm::vec3(0.2f, 0.2f, 0.2f)));
+		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "dirlight.diffuse"), 1, glm::value_ptr(lightColor));
+		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "dirlight.specular"), 1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));*/
+
+		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "spotlight.position"), 1, glm::value_ptr(camera.getPos()));
+		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "spotlight.direction"), 1, glm::value_ptr(camera.getFront()));
+		glUniform1f(glGetUniformLocation(lightedShaderProgram.ID, "spotlight.innercutoff"), glm::cos(glm::radians(10.f)));
+		glUniform1f(glGetUniformLocation(lightedShaderProgram.ID, "spotlight.outercutoff"), glm::cos(glm::radians(15.f)));
+		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "spotlight.ambient"), 1, glm::value_ptr(glm::vec3(0.1f, 0.1f, 0.1f)));
+		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "spotlight.diffuse"), 1, glm::value_ptr(lightColor));
+		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "spotlight.specular"), 1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
+
+		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "material.ambient"), 1, glm::value_ptr(glm::vec3(1.0f, 0.5f, 0.31f)));
+		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "material.diffuse"), 1, glm::value_ptr(glm::vec3(1.0f, 0.5f, 0.31f)));
+		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "material.specular"), 1, glm::value_ptr(glm::vec3(0.5f, 0.5f, 0.5f)));
+		glUniform1f(glGetUniformLocation(lightedShaderProgram.ID, "material.shininess"), 32.0f);
+		
 		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "viewPos"), 1, glm::value_ptr(viewPos));
 
 

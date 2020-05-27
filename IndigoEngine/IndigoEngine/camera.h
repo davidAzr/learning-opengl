@@ -25,6 +25,7 @@ public:
 	void ProcessMouseInput(float xoffset, float yoffset);
 	glm::mat4 GetViewMatrix() const;
 	glm::vec3 getPos() const;
+	glm::vec3 getFront() const;
 
 private:
 

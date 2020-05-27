@@ -56,6 +56,11 @@ glm::vec3 Camera::getPos() const
 	return m_position;
 }
 
+glm::vec3 Camera::getFront() const
+{
+	return m_front;
+}
+
 void Camera::UpdateCameraVectors()
 {
 	glm::vec3 direction;
