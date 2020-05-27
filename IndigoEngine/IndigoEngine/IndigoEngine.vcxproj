@@ -32,9 +32,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\fs_firsttexture.glsl" />
+    <None Include="shaders\fs_gouraudlighting.glsl" />
     <None Include="shaders\fs_hellotriangle.glsl" />
     <None Include="shaders\fs_lightcube.glsl" />
     <None Include="shaders\fs_lighted.glsl" />
+    <None Include="shaders\fs_phonglighting.glsl" />
     <None Include="shaders\fs_postofrag.glsl" />
     <None Include="shaders\fs_twotextures.glsl" />
     <None Include="shaders\fs_twotexturesflip.glsl" />
@@ -43,9 +45,11 @@
     <None Include="shaders\vs_first3d.glsl" />
     <None Include="shaders\vs_firsttexture.glsl" />
     <None Include="shaders\vs_firsttransform.glsl" />
+    <None Include="shaders\vs_gouraudlighting.glsl" />
     <None Include="shaders\vs_hellotriangle.glsl" />
     <None Include="shaders\vs_lightcube.glsl" />
     <None Include="shaders\vs_lighted.glsl" />
+    <None Include="shaders\vs_phonglighting.glsl" />
     <None Include="shaders\vs_postofrag.glsl" />
     <None Include="shaders\vs_upsidedown.glsl" />
     <None Include="shaders\vs_withcolorinput.glsl" />

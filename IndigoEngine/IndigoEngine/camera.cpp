@@ -46,9 +46,14 @@ void Camera::ProcessMouseInput(float xoffset, float yoffset)
 	UpdateCameraVectors();
 }
 
-glm::mat4 Camera::GetViewMatrix()
+glm::mat4 Camera::GetViewMatrix() const
 {
 	return glm::lookAt(m_position, m_position + m_front, m_up);
+}
+
+glm::vec3 Camera::getPos() const
+{
+	return m_position;
 }
 
 void Camera::UpdateCameraVectors()

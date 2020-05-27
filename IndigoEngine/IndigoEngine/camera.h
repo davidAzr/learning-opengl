@@ -23,7 +23,8 @@ public:
 	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
 	void ProcessKeyboardInput(direction movementDirection, float deltaTime);
 	void ProcessMouseInput(float xoffset, float yoffset);
-	glm::mat4 GetViewMatrix();
+	glm::mat4 GetViewMatrix() const;
+	glm::vec3 getPos() const;
 
 private:
 

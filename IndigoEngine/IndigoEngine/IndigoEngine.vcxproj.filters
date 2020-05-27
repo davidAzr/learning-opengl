@@ -62,6 +62,10 @@
     <None Include="shaders\vs_lightcube.glsl" />
     <None Include="shaders\vs_lighted.glsl" />
     <None Include="shaders\fs_lighted.glsl" />
+    <None Include="shaders\vs_phonglighting.glsl" />
+    <None Include="shaders\fs_phonglighting.glsl" />
+    <None Include="shaders\vs_gouraudlighting.glsl" />
+    <None Include="shaders\fs_gouraudlighting.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\texture1.jpg">
