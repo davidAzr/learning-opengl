@@ -140,5 +140,5 @@ vec3 CalcSpotLight(SpotLight light) {
 
 void main() {
 	
-	FragColor = vec4(CalcSpotLight(spotlight), 1.0f);
+	FragColor = vec4(CalcPointLight(pointlight), 1.0f);
 }
