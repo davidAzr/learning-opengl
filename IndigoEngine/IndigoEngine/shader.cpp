@@ -1,4 +1,5 @@
 #include "shader.h"
+#include <glm/gtc/type_ptr.hpp>
 #include <fstream>
 #include <sstream>
 
@@ -85,4 +86,35 @@ void Shader::setInt(const std::string & uniformName, int value)
 void Shader::setFloat(const std::string & uniformName, float value)
 {
 	glUniform1f(glGetUniformLocation(ID, uniformName.c_str()), value);
+}
+
+void Shader::setDirLight(const std::string & uniformName, DirLight dirlight)
+{
+	setLight(uniformName, dirlight);
+	glUniform3fv(glGetUniformLocation(ID, (uniformName + ".direction").c_str()), 1, glm::value_ptr(dirlight.direction));
+}
+
+void Shader::setSpotLight(const std::string & uniformName, SpotLight spotlight)
+{
+	setLight(uniformName, spotlight);
+	glUniform3fv(glGetUniformLocation(ID, (uniformName + ".position").c_str()), 1, glm::value_ptr(spotlight.position));
+	glUniform3fv(glGetUniformLocation(ID, (uniformName + ".direction").c_str()), 1, glm::value_ptr(spotlight.direction));
+	glUniform1f(glGetUniformLocation(ID, (uniformName + ".innercutoff").c_str()), spotlight.innercutoff);
+	glUniform1f(glGetUniformLocation(ID, (uniformName + ".outercutoff").c_str()), spotlight.outercutoff);
+}
+
+void Shader::setPointLight(const std::string & uniformName, PointLight pointlight)
+{
+	setLight(uniformName, pointlight);
+	glUniform3fv(glGetUniformLocation(ID, (uniformName + ".position").c_str()), 1, glm::value_ptr(pointlight.position));
+	glUniform1f(glGetUniformLocation(ID, (uniformName + ".constant").c_str()), pointlight.constant);
+	glUniform1f(glGetUniformLocation(ID, (uniformName + ".linear").c_str()), pointlight.linear);
+	glUniform1f(glGetUniformLocation(ID, (uniformName + ".quadratic").c_str()), pointlight.quadratic);
+}
+
+void Shader::setLight(const std::string & uniformName, Light light)
+{
+	glUniform3fv(glGetUniformLocation(ID, (uniformName + ".ambient").c_str()), 1, glm::value_ptr(light.ambient));
+	glUniform3fv(glGetUniformLocation(ID, (uniformName + ".diffuse").c_str()), 1, glm::value_ptr(light.diffuse));
+	glUniform3fv(glGetUniformLocation(ID, (uniformName + ".specular").c_str()), 1, glm::value_ptr(light.specular));
 }

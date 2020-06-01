@@ -11,6 +11,7 @@
 #include "imageloader.h"
 #include "camera.h"
 #include "model.h"
+#include "lights.h"
 
 #define VERTEX_SHADER_FILEPATH "shaders/vs_cube.glsl" 
 #define FRAGMENT_SHADER_FILEPATH "shaders/fs_twotextures.glsl" 
@@ -246,37 +247,19 @@ int main() {
 		glUniformMatrix4fv(glGetUniformLocation(lightedShaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightedCubeModelMatrix));
 		glUniformMatrix4fv(glGetUniformLocation(lightedShaderProgram.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(glGetUniformLocation(lightedShaderProgram.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
 		
-		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "pointlight.position"), 1, glm::value_ptr(lightPos));
-		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "pointlight.ambient"), 1, glm::value_ptr(glm::vec3(0.1f, 0.1f, 0.1f)));
-		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "pointlight.diffuse"), 1, glm::value_ptr(lightColor));
-		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "pointlight.specular"), 1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
-		glUniform1f(glGetUniformLocation(lightedShaderProgram.ID, "pointlight.constant"), 1.0f);
-		glUniform1f(glGetUniformLocation(lightedShaderProgram.ID, "pointlight.linear"), 0.09f);
-		glUniform1f(glGetUniformLocation(lightedShaderProgram.ID, "pointlight.quadratic"), 0.032f);
-
-		/*glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "dirlight.direction"), 1, glm::value_ptr(glm::vec3(0.0f, -1.0f, 0.0f)));
-		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "dirlight.ambient"), 1, glm::value_ptr(glm::vec3(0.2f, 0.2f, 0.2f)));
-		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "dirlight.diffuse"), 1, glm::value_ptr(lightColor));
-		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "dirlight.specular"), 1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));*/
-
-		/*glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "spotlight.position"), 1, glm::value_ptr(camera.getPos()));
-		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "spotlight.direction"), 1, glm::value_ptr(camera.getFront()));
-		glUniform1f(glGetUniformLocation(lightedShaderProgram.ID, "spotlight.innercutoff"), glm::cos(glm::radians(10.f)));
-		glUniform1f(glGetUniformLocation(lightedShaderProgram.ID, "spotlight.outercutoff"), glm::cos(glm::radians(15.f)));
-		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "spotlight.ambient"), 1, glm::value_ptr(glm::vec3(0.1f, 0.1f, 0.1f)));
-		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "spotlight.diffuse"), 1, glm::value_ptr(lightColor));
-		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "spotlight.specular"), 1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));*/
-
-		/*glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "material.ambient"), 1, glm::value_ptr(glm::vec3(1.0f, 0.5f, 0.31f)));
-		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "material.diffuse"), 1, glm::value_ptr(glm::vec3(1.0f, 0.5f, 0.31f)));
-		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "material.specular"), 1, glm::value_ptr(glm::vec3(0.5f, 0.5f, 0.5f)));
-		glUniform1f(glGetUniformLocation(lightedShaderProgram.ID, "material.shininess"), 32.0f);*/
+		DirLight dirLight(glm::vec3(0.1f, 0.0f, 0.0f), glm::vec3(0.7f, 0.2f, 0.2f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(-1.0f, -1.0f, 0.0f));
+		PointLight pointLight(glm::vec3(0.1f, 0.1f, 0.1f), lightColor, glm::vec3(1.0f, 1.0f, 1.0f), lightPos, 1.0f, 0.09f, 0.032f);
+		lightedShaderProgram.setDirLight("dirlight", dirLight);
+		lightedShaderProgram.setPointLight("pointlight[0]", pointLight);
+		glUniform1i(glGetUniformLocation(lightedShaderProgram.ID, "nPointLights"), 1);
+		glUniform1i(glGetUniformLocation(lightedShaderProgram.ID, "nSpotLights"), 0);
 		
 		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "viewPos"), 1, glm::value_ptr(viewPos));
 
 		trackmodel.Draw(lightedShaderProgram);
-		lightedCubeModelMatrix = glm::translate(lightedCubeModelMatrix, glm::vec3(2.25f, 1.5f, 0.f));
+		lightedCubeModelMatrix = glm::translate(lightedCubeModelMatrix, glm::vec3(2.25f, 1.5f, 0.f + sin((float)glfwGetTime())));
 		lightedCubeModelMatrix = glm::scale(lightedCubeModelMatrix, glm::vec3(0.6f, 0.6f, 0.6f));
 		glUniformMatrix4fv(glGetUniformLocation(lightedShaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightedCubeModelMatrix));
 		carmodel.Draw(lightedShaderProgram);
