@@ -26,7 +26,7 @@ struct PointLight : Light {
 };
 
 struct SpotLight : Light {
-	SpotLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 position, glm::vec3 direction, float constant, float innercutoff, float outercutoff)
+	SpotLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 position, glm::vec3 direction, float innercutoff, float outercutoff)
 		: Light(ambient, diffuse, specular), position(position), direction(direction), innercutoff(innercutoff), outercutoff(outercutoff) {}
 	
 	glm::vec3  position;

@@ -36,6 +36,8 @@
     <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="resources\models\coche22.mtl" />
+    <None Include="resources\models\coche23.mtl" />
     <None Include="shaders\fs_firsttexture.glsl" />
     <None Include="shaders\fs_gouraudlighting.glsl" />
     <None Include="shaders\fs_hellotriangle.glsl" />

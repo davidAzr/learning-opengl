@@ -21,6 +21,9 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void processInput(GLFWwindow* window);
 
 
+float SCR_WIDTH = 800.f;
+float SCR_HEIGHT = 600.f;
+
 float lastFrame;
 float deltaTime;
 
@@ -39,7 +42,7 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Creamos el objeto de la ventana
-	GLFWwindow* window = glfwCreateWindow(800, 600, "HelloWindow", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "HelloWindow", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << '\n';
@@ -196,10 +199,11 @@ int main() {
 	//shaderProgram.setInt("texture2", 1);
 
 	glm::mat4 projection;
-	projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+	
 
 	Model trackmodel("resources/models/slot_straight_track.obj");
-	Model carmodel("resources/models/coche1.obj");
+	Model orangecar("resources/models/coche22.obj");
+	Model whitecar("resources/models/coche1.obj");
 
 	// Render loop
 	while (!glfwWindowShouldClose(window)) {
@@ -211,16 +215,18 @@ int main() {
 		// input
 		processInput(window);
 
-		glClearColor(0.6f, 0.1f, 0.5f, 1.0f);
+		glClearColor(0.f, 0.5f, 0.7f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glm::mat4 view;
 		view = camera.GetViewMatrix();
 
+		projection = glm::perspective(glm::radians(45.0f), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
+
 		glm::vec3 lightColor;
-		lightColor.x = 1;
-		lightColor.y = 1;
-		lightColor.z = 1;
+		lightColor.r = 1;
+		lightColor.g = 1;
+		lightColor.b = 0;
 
 		glm::vec3 viewPos = camera.getPos();
 
@@ -228,7 +234,7 @@ int main() {
 
 		float radius = 5.f;
 		//glm::vec3 lightPos(sin(currentTime) * radius, 1.0f, cos(currentTime) * radius);
-		glm::vec3 lightPos(5.f, 5.f, -5.f);
+		glm::vec3 lightPos(0.f, 5.f, -5.f);
 		glm::mat4 lightCubeModelMatrix(1.0f);
 		lightCubeModelMatrix = glm::translate(lightCubeModelMatrix, lightPos);
 		lightCubeModelMatrix = glm::scale(lightCubeModelMatrix, glm::vec3(0.2f));
@@ -249,20 +255,35 @@ int main() {
 		glUniformMatrix4fv(glGetUniformLocation(lightedShaderProgram.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
 		
-		DirLight dirLight(glm::vec3(0.1f, 0.0f, 0.0f), glm::vec3(0.7f, 0.2f, 0.2f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(-1.0f, -1.0f, 0.0f));
-		PointLight pointLight(glm::vec3(0.1f, 0.1f, 0.1f), lightColor, glm::vec3(1.0f, 1.0f, 1.0f), lightPos, 1.0f, 0.09f, 0.032f);
+		DirLight dirLight(glm::vec3(0.1f, 0.1f, 0.1f), glm::vec3(1.f, 1.f, 1.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(-1.0f, -1.0f, 0.0f));
+		//PointLight pointLight(glm::vec3(0.1f, 0.1f, 0.1f), lightColor, glm::vec3(1.0f, 1.0f, 0.0f), lightPos, 1.0f, 0.09f, 0.032f);
+		glm::vec3 spotColor(1.0f, 1.0f, 0.0f);
+		SpotLight spotLight(spotColor * 0.0f, spotColor, spotColor, lightPos, glm::vec3(0.f, -1.f, 0.f), glm::cos(glm::radians(20.f)), glm::cos(glm::radians(30.f)));
 		lightedShaderProgram.setDirLight("dirlight", dirLight);
-		lightedShaderProgram.setPointLight("pointlight[0]", pointLight);
-		glUniform1i(glGetUniformLocation(lightedShaderProgram.ID, "nPointLights"), 1);
-		glUniform1i(glGetUniformLocation(lightedShaderProgram.ID, "nSpotLights"), 0);
+		//lightedShaderProgram.setPointLight("pointlight[0]", pointLight);
+		lightedShaderProgram.setSpotLight("spotlight[0]", spotLight);
+		glUniform1i(glGetUniformLocation(lightedShaderProgram.ID, "nPointLights"), 0);
+		glUniform1i(glGetUniformLocation(lightedShaderProgram.ID, "nSpotLights"), 1);
 		
 		glUniform3fv(glGetUniformLocation(lightedShaderProgram.ID, "viewPos"), 1, glm::value_ptr(viewPos));
 
 		trackmodel.Draw(lightedShaderProgram);
-		lightedCubeModelMatrix = glm::translate(lightedCubeModelMatrix, glm::vec3(2.25f, 1.5f, 0.f + sin((float)glfwGetTime())));
-		lightedCubeModelMatrix = glm::scale(lightedCubeModelMatrix, glm::vec3(0.6f, 0.6f, 0.6f));
-		glUniformMatrix4fv(glGetUniformLocation(lightedShaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightedCubeModelMatrix));
-		carmodel.Draw(lightedShaderProgram);
+		
+		glm::mat4 orangecarmodelmat(1.0f);
+		orangecarmodelmat = glm::translate(orangecarmodelmat, glm::vec3(2.25f, 1.0f, 0.f + sin((float)glfwGetTime())));
+		orangecarmodelmat = glm::scale(orangecarmodelmat, glm::vec3(0.6f, 0.6f, 0.6f));
+		glUniformMatrix4fv(glGetUniformLocation(lightedShaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(orangecarmodelmat));
+		orangecar.Draw(lightedShaderProgram);
+		
+		glm::mat4 whitecarmodelmat(1.0f);
+		whitecarmodelmat = glm::translate(whitecarmodelmat, glm::vec3(-2.25f, 1.3f, 0.f + cos((float)glfwGetTime())));
+		whitecarmodelmat = glm::rotate(whitecarmodelmat, glm::radians(180.f), glm::vec3(0.f, 1.f, 0.f));
+		whitecarmodelmat = glm::scale(whitecarmodelmat, glm::vec3(0.6f, 0.6f, 0.6f));
+		glUniformMatrix4fv(glGetUniformLocation(lightedShaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(whitecarmodelmat));
+		whitecar.Draw(lightedShaderProgram);
+
+
+		
 		//glBindVertexArray(VAOlighted);
 		//glDrawArrays(GL_TRIANGLES, 0, 36);
 
@@ -276,6 +297,8 @@ int main() {
 
 // Callback function to be called each time the window is resized
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+	SCR_HEIGHT = height;
+	SCR_WIDTH = width;
 	glViewport(0, 0, width, height);
 }
 
